@@ -19,10 +19,11 @@ public partial class CodeFirstDbContext : DbContext
 
     public virtual DbSet<Student> Students { get; set; }
 
+    public virtual DbSet<UserCredential> UserCredentials { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    { 
-    
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=EXP-D-0158\\SQLEXPRESS;Database=CodeFirstDB;User Id=sa;Password=sa@123;TrustServerCertificate=True;Encrypt=False;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -46,6 +47,18 @@ public partial class CodeFirstDbContext : DbContext
             entity.Property(e => e.StudentName)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<UserCredential>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__UserCred__3214EC070DEF6175");
+
+            entity.ToTable("UserCredential");
+
+            entity.HasIndex(e => e.Username, "UQ__UserCred__536C85E4D562F32F").IsUnique();
+
+            entity.Property(e => e.Password).HasMaxLength(255);
+            entity.Property(e => e.Username).HasMaxLength(50);
         });
 
         OnModelCreatingPartial(modelBuilder);

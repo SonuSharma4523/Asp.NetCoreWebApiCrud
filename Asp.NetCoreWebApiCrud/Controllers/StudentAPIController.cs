@@ -1,4 +1,5 @@
 ﻿using Asp.NetCoreWebApiCrud.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ namespace Asp.NetCoreWebApiCrud.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StudentAPIController : ControllerBase
     {
         private readonly CodeFirstDbContext context;
@@ -16,12 +18,14 @@ namespace Asp.NetCoreWebApiCrud.Controllers
             this.context = context;
         }
         [HttpGet]
+        [Route("Allstudentlist")]
         public async Task<ActionResult<List<Student>>>  GetStudents()
         {
             var data = await context.Students.ToListAsync();
             return Ok(data);
         }
         [HttpGet("{id}")]
+        
         public async Task<ActionResult<List<Student>>> GetStudentsById(int id)
         {
             var Student = await context.Students.FindAsync(id);
@@ -35,6 +39,7 @@ namespace Asp.NetCoreWebApiCrud.Controllers
 
         }
         [HttpPost]
+        
         public async Task<ActionResult<List<Student>>> CreateStudent(Student std)
         {
             await context.Students.AddAsync(std);
@@ -42,6 +47,7 @@ namespace Asp.NetCoreWebApiCrud.Controllers
             return Ok(std);
         }
         [HttpPut("{id}")]
+        
         public async Task<ActionResult<List<Student>>> UpdateStudent(int id, Student std)
         {
             if (id != std.Id)
@@ -54,7 +60,8 @@ namespace Asp.NetCoreWebApiCrud.Controllers
             return Ok(std);
 
         }
-        [HttpDelete("{id}")] 
+        [HttpDelete("{id}")]
+        
         public async Task<ActionResult<List<Student>>> deleteStudent(int id)
         {
             var std = await context.Students.FindAsync(id);
